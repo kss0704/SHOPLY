@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Shoply — Home</title>
+<link rel="icon" href="https://images.unsplash.com/photo-1503602642458-232111445657?q=80&w=48&auto=format&fit=crop&crop=faces">
+<style>
+  :root{
+    --bg:#f7fbff; --card:#ffffff; --accent:#4f46e5; --muted:#6b7280;
+    --accent-2:#60a5fa;
+    font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:#0f172a;line-height:1.4}
+  header{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;background:linear-gradient(90deg,#ffffffcc, #f0f9ffcc);position:sticky;top:0;backdrop-filter:blur(6px);z-index:20}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand img{width:44px;height:44px;border-radius:8px;object-fit:cover}
+  .brand h1{font-size:18px;margin:0;color:var(--accent)}
+  nav a{margin:0 8px;color:var(--muted);text-decoration:none}
+  .actions{display:flex;gap:12px;align-items:center}
+  .btn{background:var(--accent);color:#fff;padding:8px 12px;border-radius:8px;text-decoration:none}
+  .btn-ghost{background:transparent;border:1px solid #e6eefc;padding:8px 12px;border-radius:8px;color:var(--accent)}
+  /* hero slider */
+  .hero{max-width:1200px;margin:20px auto;padding:0 16px;display:grid;grid-template-columns:1fr 360px;gap:20px;align-items:center}
+  @media(max-width:900px){.hero{grid-template-columns:1fr}}
+  .slider{position:relative;border-radius:12px;overflow:hidden;box-shadow:0 6px 30px rgba(20,24,40,0.06)}
+  .slides{display:flex;transition:transform .6s ease}
+  .slide{min-width:100%;height:320px;background-size:cover;background-position:center;display:flex;align-items:flex-end;padding:20px;color:#fff}
+  .slide .overlay{background:linear-gradient(180deg,#00000000,#00000066);padding:18px;border-radius:8px}
+  .dots{position:absolute;left:16px;bottom:14px;display:flex;gap:8px}
+  .dot{width:10px;height:10px;border-radius:50%;background:#ffffff88}
+  .dot.active{background:var(--accent)}
+  /* featured card */
+  .promo{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 6px 18px rgba(12,16,30,0.04)}
+  .promo h3{margin:0}
+  .grid{max-width:1200px;margin:16px auto;padding:0 16px;display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  @media(max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:560px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--card);border-radius:12px;padding:12px;box-shadow:0 8px 20px rgba(13,18,37,0.04);display:flex;flex-direction:column;gap:8px}
+  .card img{width:100%;height:200px;object-fit:cover;border-radius:8px}
+  .price{font-weight:700;color:var(--accent);font-size:18px}
+  footer{max-width:1200px;margin:24px auto;padding:18px;color:var(--muted)}
+  .search{display:flex;gap:10px;align-items:center}
+  .search input{padding:10px 12px;border-radius:10px;border:1px solid #e6eefc;min-width:280px}
+  .mini-cart{display:flex;align-items:center;gap:8px;cursor:pointer}
+  .badge{background:#ef4444;color:white;padding:2px 8px;border-radius:999px;font-size:12px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=200&auto=format&fit=crop" alt="logo">
+    <h1>Shoply</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="cart.html">Cart</a>
+    </nav>
+  </div>
+
+  <div class="actions">
+    <div class="search">
+      <input id="searchInput" placeholder="Search products, e.g., headphones" />
+      <a class="btn-ghost" id="searchBtn">Search</a>
+    </div>
+    <a class="mini-cart" href="cart.html">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 3h2l1 11h12l3-8H8" stroke="#0f172a" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span id="cartCount" class="badge" style="display:none">0</span>
+    </a>
+    <a href="products.html" class="btn">Shop</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="slider" id="slider">
+      <div class="slides" id="slides">
+        <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1542293787937-c9e299b8807a?q=80&w=1400&auto=format&fit=crop');">
+          <div class="overlay">
+            <h2 style="margin:0">Big Winter Sale — Up to 50% off</h2>
+            <p style="margin:6px 0 0">Top electronics, fashion and home picks.</p>
+            <a href="products.html" class="btn" style="margin-top:8px;display:inline-block">Shop Deals</a>
+          </div>
+        </div>
+        <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1526178612022-2d1519de6b25?q=80&w=1400&auto=format&fit=crop');">
+          <div class="overlay">
+            <h2 style="margin:0">New Arrivals — Tech & Gadgets</h2>
+            <p style="margin:6px 0 0">Curated gadgets chosen for you.</p>
+            <a href="products.html" class="btn" style="margin-top:8px;display:inline-block">Browse</a>
+          </div>
+        </div>
+        <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1536305030019-7c4813da9b87?q=80&w=1400&auto=format&fit=crop');">
+          <div class="overlay">
+            <h2 style="margin:0">Home & Living Essentials</h2>
+            <p style="margin:6px 0 0">Make your home cozy and smart.</p>
+            <a href="products.html" class="btn" style="margin-top:8px;display:inline-block">Explore</a>
+          </div>
+        </div>
+      </div>
+      <div class="dots" id="dots"></div>
+    </div>
+
+    <aside class="promo">
+      <h3>Trending Today</h3>
+      <p style="color:var(--muted)">Handpicked trending essentials at great prices.</p>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+        <img src="https://images.unsplash.com/photo-1545239351-1141bd82e8a6?q=80&w=400&auto=format&fit=crop" alt="" style="width:72px;height:72px;border-radius:8px;object-fit:cover">
+        <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=400&auto=format&fit=crop" alt="" style="width:72px;height:72px;border-radius:8px;object-fit:cover">
+        <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=400&auto=format&fit=crop" alt="" style="width:72px;height:72px;border-radius:8px;object-fit:cover">
+        <img src="https://images.unsplash.com/photo-1495121605193-b116b5b09d2a?q=80&w=400&auto=format&fit=crop" alt="" style="width:72px;height:72px;border-radius:8px;object-fit:cover">
+      </div>
+    </aside>
+  </section>
+
+  <section class="grid" id="featured">
+    <!-- JS will populate featured cards -->
+  </section>
+
+  <section style="max-width:1200px;margin:10px auto;padding:0 16px;">
+    <h2 style="margin:6px 0;color:var(--accent)">Why Shoply?</h2>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+      <div style="background:var(--card);padding:12px;border-radius:10px;box-shadow:0 8px 20px rgba(12,16,30,0.04)">
+        <img src="https://images.unsplash.com/photo-1556741533-f6acd647d2fb?q=80&w=400&auto=format&fit=crop" style="width:100%;height:140px;object-fit:cover;border-radius:8px">
+        <h4 style="margin:8px 0 0">Free & fast delivery</h4>
+        <p style="color:var(--muted);margin:6px 0 0">Fast shipping across India with easy returns.</p>
+      </div>
+      <div style="background:var(--card);padding:12px;border-radius:10px;box-shadow:0 8px 20px rgba(12,16,30,0.04)">
+        <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=400&auto=format&fit=crop" style="width:100%;height:140px;object-fit:cover;border-radius:8px">
+        <h4 style="margin:8px 0 0">Secure payments</h4>
+        <p style="color:var(--muted);margin:6px 0 0">Multiple payment options, secure checkout.</p>
+      </div>
+      <div style="background:var(--card);padding:12px;border-radius:10px;box-shadow:0 8px 20px rgba(12,16,30,0.04)">
+        <img src="https://images.unsplash.com/photo-1543269865-cbf427effbad?q=80&w=400&auto=format&fit=crop" style="width:100%;height:140px;object-fit:cover;border-radius:8px">
+        <h4 style="margin:8px 0 0">Curated selection</h4>
+        <p style="color:var(--muted);margin:6px 0 0">Top brands and great prices.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap">
+    <div>© <strong>Shoply</strong> 2025</div>
+    <div style="color:var(--muted)">Made with ❤️ • Responsive • Client-side demo</div>
+  </div>
+</footer>
+
+<script>
+/* Demo product data — same data used across site via localStorage */
+const demoProducts = [
+  {id:1,title:"Noise Cancelling Headphones",price:2499,cat:"electronics",img:"https://images.unsplash.com/photo-1518444025576-3f4173b1e182?q=80&w=800&auto=format&fit=crop"},
+  {id:2,title:"Smartwatch Series 5",price:6999,cat:"electronics",img:"https://images.unsplash.com/photo-1518546305922-8b3b0e8f1f2d?q=80&w=800&auto=format&fit=crop"},
+  {id:3,title:"Classic Leather Wallet",price:999,cat:"fashion",img:"https://images.unsplash.com/photo-1603251362466-8a7d21a7b4a9?q=80&w=800&auto=format&fit=crop"},
+  {id:4,title:"Running Shoes",price:2999,cat:"fashion",img:"https://images.unsplash.com/photo-1519741491623-0a0b0b1c6c9e?q=80&w=800&auto=format&fit=crop"},
+  {id:5,title:"Ceramic Coffee Mug (Set of 2)",price:799,cat:"home",img:"https://images.unsplash.com/photo-1523906630133-f6934a1abf10?q=80&w=800&auto=format&fit=crop"},
+  {id:6,title:"Bluetooth Speaker",price:3499,cat:"electronics",img:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=800&auto=format&fit=crop"},
+  {id:7,title:"Desk Lamp LED",price:1199,cat:"home",img:"https://images.unsplash.com/photo-1519710164239-da123dc03ef4?q=80&w=800&auto=format&fit=crop"},
+  {id:8,title:"Backpack — Travel",price:2599,cat:"fashion",img:"https://images.unsplash.com/photo-1503342452485-86c6d45a7bbf?q=80&w=800&auto=format&fit=crop"}
+];
+if(!localStorage.getItem('shoply_products')) {
+  localStorage.setItem('shoply_products', JSON.stringify(demoProducts));
+}
+
+/* Slider */
+const slidesEl = document.getElementById('slides');
+const dotsEl = document.getElementById('dots');
+let index = 0;
+const slides = slidesEl.children;
+for(let i=0;i<slides.length;i++){
+  const dot = document.createElement('div'); dot.className='dot' + (i===0?' active':'');
+  dot.onclick = ()=>{go(i)}
+  dotsEl.appendChild(dot);
+}
+function go(i){ index=i; update(); }
+function update(){ slidesEl.style.transform = `translateX(-${index*100}%)`; Array.from(dotsEl.children).forEach((d,ii)=>d.className = 'dot'+(ii===index?' active':'')); }
+setInterval(()=>{ index = (index+1)%slides.length; update(); },5000);
+
+/* render featured */
+const featured = document.getElementById('featured');
+const products = JSON.parse(localStorage.getItem('shoply_products') || '[]');
+function addToCart(id){
+  const cart = JSON.parse(localStorage.getItem('shoply_cart')||'[]');
+  const p = products.find(x=>x.id===id);
+  const existing = cart.find(c=>c.id===id);
+  if(existing) existing.qty++;
+  else cart.push({id:p.id,title:p.title,price:p.price,img:p.img,qty:1});
+  localStorage.setItem('shoply_cart',JSON.stringify(cart));
+  refreshCartCount();
+  alert('Added to cart: ' + p.title);
+}
+function renderFeatured(){
+  featured.innerHTML='';
+  const sample = products.slice(0,8);
+  sample.forEach(p=>{
+    const card = document.createElement('div'); card.className='card';
+    card.innerHTML = `
+      <img src="${p.img}" alt="${p.title}">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h3 style="font-size:16px;margin:0">${p.title}</h3>
+        <div class="price">₹${p.price}</div>
+      </div>
+      <p style="color:var(--muted);margin:0">Category: ${p.cat}</p>
+      <div style="display:flex;gap:8px;margin-top:auto">
+        <a class="btn" href="product-details.html?id=${p.id}">View</a>
+        <button class="btn-ghost" onclick="addToCart(${p.id})">Add to cart</button>
+      </div>
+    `;
+    featured.appendChild(card);
+  });
+}
+renderFeatured();
+
+/* search */
+document.getElementById('searchBtn').addEventListener('click', ()=> {
+  const q = document.getElementById('searchInput').value.trim();
+  if(!q) { location.href = 'products.html'; return; }
+  location.href = `products.html?q=${encodeURIComponent(q)}`;
+});
+
+/* cart count */
+function refreshCartCount(){
+  const c = JSON.parse(localStorage.getItem('shoply_cart')||'[]').reduce((s,i)=>s+i.qty,0);
+  const el = document.getElementById('cartCount');
+  if(c>0){ el.style.display='inline-block'; el.textContent=c; } else el.style.display='none';
+}
+refreshCartCount();
+</script>
+</body>
+</html>
