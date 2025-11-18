@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Shoply — Cart</title>
+<style>
+  :root{--bg:#f7fbff;--card:#fff;--accent:#4f46e5;--muted:#6b7280}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,Arial;background:var(--bg);color:#071029}
+  header{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:linear-gradient(90deg,#ffffffcc,#f0f9ffcc)}
+  main{max-width:1100px;margin:20px auto;padding:0 16px}
+  .cart-item{display:flex;gap:12px;align-items:center;background:var(--card);padding:12px;border-radius:10px;margin-bottom:12px;box-shadow:0 8px 20px rgba(12,16,30,0.04)}
+  .cart-item img{width:120px;height:90px;object-fit:cover;border-radius:8px}
+  .muted{color:var(--muted)}
+  .total{background:var(--card);padding:16px;border-radius:12px;box-shadow:0 8px 20px rgba(12,16,30,0.04)}
+  .btn{background:var(--accent);color:white;padding:10px 14px;border-radius:10px;text-decoration:none}
+  input[type=number]{width:70px;padding:6px;border-radius:6px;border:1px solid #eef6ff}
+</style>
+</head>
+<body>
+<header>
+  <div><a href="index.html" style="text-decoration:none;color:var(--accent)">← Continue shopping</a></div>
+  <div><strong>Cart</strong></div>
+</header>
+
+<main id="main">
+  <div id="itemsArea"></div>
+
+  <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:flex-end;margin-top:16px">
+    <div class="total" id="summary">
+      <!-- summary -->
+    </div>
+  </div>
+</main>
+
+<script>
+let cart = JSON.parse(localStorage.getItem('shoply_cart')||'[]');
+const itemsArea = document.getElementById('itemsArea');
+
+function render(){
+  itemsArea.innerHTML='';
+  if(cart.length===0){
+    itemsArea.innerHTML = '<div style="background:var(--card);padding:36px;border-radius:10px;text-align:center">Your cart is empty. <a href="products.html">Shop now</a></div>';
+    document.getElementById('summary').innerHTML = '';
+    return;
+  }
+  cart.forEach(item=>{
+    const div = document.createElement('div'); div.className='cart-item';
+    div.innerHTML = `
+      <img src="${item.img}" alt="${item.title}">
+      <div style="flex:1">
+        <h3 style="margin:0">${item.title}</h3>
+        <div class="muted">₹${item.price} each</div>
+        <div style="margin-top:8px;display:flex;gap:8px;align-items:center">
+          Quantity: <input type="number" min="1" value="${item.qty}" onchange="updateQty(${item.id},this.value)">
+          <button onclick="removeItem(${item.id})" style="background:transparent;border:none;color:#ef4444;cursor:pointer">Remove</button>
+        </div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-weight:700">₹${item.price * item.qty}</div>
+      </div>
+    `;
+    itemsArea.appendChild(div);
+  });
+  renderSummary();
+}
+
+function updateQty(id, qty){
+  qty = Number(qty) || 1;
+  cart = cart.map(c => c.id===id ? {...c, qty} : c);
+  localStorage.setItem('shoply_cart', JSON.stringify(cart));
+  render();
+}
+function removeItem(id){
+  if(!confirm('Remove this item?')) return;
+  cart = cart.filter(c=>c.id!==id);
+  localStorage.setItem('shoply_cart', JSON.stringify(cart));
+  render();
+}
+function renderSummary(){
+  const subtotal = cart.reduce((s,i)=>s + i.price * i.qty, 0);
+  const shipping = subtotal>1999 ? 0 : 99;
+  const total = subtotal + shipping;
+  document.getElementById('summary').innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:8px;min-width:280px">
+      <div style="display:flex;justify-content:space-between"><span class="muted">Subtotal</span><strong>₹${subtotal}</strong></div>
+      <div style="display:flex;justify-content:space-between"><span class="muted">Shipping</span><strong>${shipping===0?'Free':'₹'+shipping}</strong></div>
+      <hr style="border:none;border-top:1px solid #f1f6ff">
+      <div style="display:flex;justify-content:space-between"><span>Total</span><strong>₹${total}</strong></div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <a class="btn" href="payment.html">Proceed to payment</a>
+        <button class="btn" style="background:#ef4444" onclick="clearCart()">Clear</button>
+      </div>
+    </div>
+  `;
+}
+function clearCart(){ if(confirm('Clear entire cart?')){ cart=[]; localStorage.setItem('shoply_cart', JSON.stringify(cart)); render(); } }
+render();
+</script>
+</body>
+</html>
