@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Shoply — Products</title>
+<style>
+  :root{--bg:#f7fbff;--card:#fff;--accent:#4f46e5;--muted:#6b7280}
+  *{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,Arial;background:var(--bg);color:#071029}
+  header{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:linear-gradient(90deg,#ffffffcc,#f0f9ffcc)}
+  .controls{max-width:1200px;margin:12px auto;padding:0 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .filter, .sort{background:var(--card);padding:10px;border-radius:8px;border:1px solid #eef6ff}
+  .grid{max-width:1200px;margin:12px auto;padding:0 16px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media(max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:560px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--card);border-radius:12px;padding:12px;box-shadow:0 8px 20px rgba(12,16,30,0.04);display:flex;flex-direction:column}
+  .card img{width:100%;height:200px;object-fit:cover;border-radius:8px}
+  .price{font-weight:700;color:var(--accent)}
+  .footer{max-width:1200px;margin:20px auto;padding:12px;color:var(--muted)}
+  input[type="number"]{width:80px;padding:6px}
+  .btn{background:var(--accent);color:white;padding:8px 10px;border-radius:8px;text-decoration:none}
+  .btn-ghost{background:transparent;border:1px solid #e6eefc;padding:8px;border-radius:8px}
+</style>
+</head>
+<body>
+<header>
+  <div style="display:flex;align-items:center;gap:12px">
+    <a href="index.html" style="text-decoration:none;color:var(--accent)"><strong>← Back</strong></a>
+    <h2 style="margin:0">Products</h2>
+  </div>
+  <div>
+    <a href="cart.html" class="btn-ghost">Cart</a>
+  </div>
+</header>
+
+<section class="controls">
+  <div class="filter">
+    <label>Category:
+      <select id="categorySelect">
+        <option value="">All</option>
+        <option value="electronics">Electronics</option>
+        <option value="fashion">Fashion</option>
+        <option value="home">Home</option>
+      </select>
+    </label>
+  </div>
+  <div class="filter">
+    <label>Price:
+      <select id="priceSelect">
+        <option value="">All</option>
+        <option value="0-999">Under ₹1000</option>
+        <option value="1000-3000">₹1000 - ₹3000</option>
+        <option value="3001-10000">Above ₹3000</option>
+      </select>
+    </label>
+  </div>
+  <div class="sort">
+    <label>Sort:
+      <select id="sortSelect">
+        <option value="">Featured</option>
+        <option value="price-asc">Price low → high</option>
+        <option value="price-desc">Price high → low</option>
+      </select>
+    </label>
+  </div>
+
+  <div style="margin-left:auto">
+    <input id="search" placeholder="Search products..." style="padding:8px;border-radius:8px;border:1px solid #eef6ff" />
+    <button id="searchBtn" class="btn">Search</button>
+  </div>
+</section>
+
+<section class="grid" id="productGrid">
+  <!-- JS will render -->
+</section>
+
+<footer class="footer">
+  Showing results. This is a front-end demo; no backend required.
+</footer>
+
+<script>
+const products = JSON.parse(localStorage.getItem('shoply_products')||'[]');
+const grid = document.getElementById('productGrid');
+const urlParams = new URLSearchParams(location.search);
+const query = urlParams.get('q') || '';
+
+document.getElementById('search').value = query;
+
+/* render products according to filters */
+function render(){
+  let arr = products.slice();
+  const cat = document.getElementById('categorySelect').value;
+  const price = document.getElementById('priceSelect').value;
+  const sort = document.getElementById('sortSelect').value;
+  const search = document.getElementById('search').value.trim().toLowerCase();
+
+  if(cat) arr = arr.filter(p=>p.cat===cat);
+  if(price){
+    const [lo,hi] = price.split('-').map(Number);
+    arr = arr.filter(p => p.price >= lo && (hi? p.price <= hi : true));
+  }
+  if(search) arr = arr.filter(p => p.title.toLowerCase().includes(search) || p.cat.toLowerCase().includes(search));
+  if(sort==='price-asc') arr.sort((a,b)=>a.price-b.price);
+  if(sort==='price-desc') arr.sort((a,b)=>b.price-a.price);
+
+  grid.innerHTML='';
+  if(arr.length===0){ grid.innerHTML='<div style="grid-column:1/-1;padding:40px;background:var(--card);border-radius:8px">No products found</div>'; return; }
+  arr.forEach(p=>{
+    const c = document.createElement('div'); c.className='card';
+    c.innerHTML = `
+      <img src="${p.img}" alt="${p.title}">
+      <h3 style="margin:8px 0 0">${p.title}</h3>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="price">₹${p.price}</div>
+        <div style="color:var(--muted)">Category: ${p.cat}</div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:auto">
+        <a class="btn" href="product-details.html?id=${p.id}">View</a>
+        <button class="btn-ghost" onclick="addToCart(${p.id})">Add to cart</button>
+      </div>
+    `;
+    grid.appendChild(c);
+  });
+}
+function addToCart(id){
+  const cart = JSON.parse(localStorage.getItem('shoply_cart')||'[]');
+  const p = products.find(x=>x.id===id);
+  const existing = cart.find(c=>c.id===id);
+  if(existing) existing.qty++;
+  else cart.push({id:p.id,title:p.title,price:p.price,img:p.img,qty:1});
+  localStorage.setItem('shoply_cart',JSON.stringify(cart));
+  alert('Added to cart: ' + p.title);
+  window.location.reload();
+}
+
+/* wire up controls */
+document.getElementById('categorySelect').addEventListener('change',render);
+document.getElementById('priceSelect').addEventListener('change',render);
+document.getElementById('sortSelect').addEventListener('change',render);
+document.getElementById('searchBtn').addEventListener('click',render);
+
+render();
+
+/* If q param present, pre-filter by it */
+if(query) {
+  document.getElementById('search').value = query;
+  render();
+}
+</script>
+</body>
+</html>
