@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Shoply — Thank you</title>
+<style>
+  :root{--bg:#f7fbff;--card:#fff;--accent:#4f46e5;--muted:#6b7280}
+  body{margin:0;font-family:Inter,Arial;background:var(--bg);color:#071029;display:flex;align-items:center;justify-content:center;height:100vh}
+  .card{background:var(--card);padding:28px;border-radius:12px;box-shadow:0 16px 40px rgba(12,16,30,0.06);max-width:700px;text-align:center}
+  .btn{background:var(--accent);color:white;padding:10px 14px;border-radius:10px;text-decoration:none}
+</style>
+</head>
+<body>
+  <div class="card" id="card">
+    <h1>Thank you!</h1>
+    <p id="msg">Processing your order...</p>
+    <div style="margin-top:16px">
+      <a href="index.html" class="btn">Continue shopping</a>
+    </div>
+  </div>
+
+<script>
+const params = new URLSearchParams(location.search);
+const orderId = params.get('order');
+let orders = JSON.parse(localStorage.getItem('shoply_orders')||'[]');
+const order = orders.find(o=>o.id === orderId);
+
+if(order){
+  document.getElementById('msg').innerHTML = `
+    Your order <strong>${order.id}</strong> has been placed successfully.<br>
+    Amount: <strong>₹${order.total}</strong><br>
+    A confirmation email would be sent to <strong>${order.email}</strong> (demo).
+  `;
+} else {
+  document.getElementById('msg').innerHTML = `Order completed. (No order id found)`;
+}
+</script>
+</body>
+</html>
