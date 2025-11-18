@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Shoply — Payment</title>
+<style>
+  :root{--bg:#f7fbff;--card:#fff;--accent:#4f46e5;--muted:#6b7280}
+  body{margin:0;font-family:Inter,Arial;background:var(--bg);color:#071029}
+  header{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:linear-gradient(90deg,#ffffffcc,#f0f9ffcc)}
+  main{max-width:900px;margin:20px auto;padding:0 16px}
+  .card{background:var(--card);padding:16px;border-radius:12px;box-shadow:0 8px 20px rgba(12,16,30,0.04)}
+  .row{display:flex;gap:12px;flex-wrap:wrap}
+  input,select{padding:10px;border-radius:8px;border:1px solid #eef6ff;width:100%}
+  label{font-size:14px;color:var(--muted)}
+  .btn{background:var(--accent);color:white;padding:10px 14px;border-radius:10px;text-decoration:none;border:none}
+</style>
+</head>
+<body>
+<header>
+  <div><a href="cart.html" style="text-decoration:none;color:var(--accent)">← Back to cart</a></div>
+  <div><strong>Secure Checkout</strong></div>
+</header>
+
+<main>
+  <div class="card">
+    <h3 style="margin-top:0">Billing details</h3>
+    <form id="payForm" onsubmit="return submitForm(event)">
+      <div class="row">
+        <div style="flex:1">
+          <label>Full name</label>
+          <input id="name" required>
+        </div>
+        <div style="flex:1">
+          <label>Email</label>
+          <input id="email" type="email" required>
+        </div>
+      </div>
+
+      <div style="margin-top:12px">
+        <label>Address</label>
+        <input id="address" placeholder="Street, city, state, PIN" required>
+      </div>
+
+      <h4 style="margin-top:18px">Payment</h4>
+      <div class="row">
+        <div style="flex:1">
+          <label>Card number</label>
+          <input id="card" placeholder="4111 1111 1111 1111" required maxlength="19">
+        </div>
+        <div style="width:140px">
+          <label>Expiry (MM/YY)</label>
+          <input id="exp" placeholder="08/25" required>
+        </div>
+        <div style="width:120px">
+          <label>CVV</label>
+          <input id="cvv" placeholder="123" required maxlength="4">
+        </div>
+      </div>
+
+      <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center">
+        <div style="color:var(--muted)">This is a demo checkout — no real payment will be made.</div>
+        <button class="btn" type="submit">Pay now</button>
+      </div>
+    </form>
+  </div>
+  <div style="margin-top:12px" id="orderSummary"></div>
+</main>
+
+<script>
+const cart = JSON.parse(localStorage.getItem('shoply_cart')||'[]');
+function calcSummary(){
+  const subtotal = cart.reduce((s,i)=>s + i.price * i.qty, 0);
+  const shipping = subtotal>1999 ? 0 : 99;
+  const total = subtotal + shipping;
+  return {subtotal,shipping,total};
+}
+function showSummary(){
+  const s = calcSummary();
+  document.getElementById('orderSummary').innerHTML = `
+    <div class="card">
+      <strong>Order summary</strong>
+      <div style="margin-top:8px;color:var(--muted)">
+        Items: ${cart.length} | Subtotal: ₹${s.subtotal} | Shipping: ${s.shipping===0?'Free':'₹'+s.shipping}
+      </div>
+      <div style="margin-top:12px;font-size:18px">Total: <strong>₹${s.total}</strong></div>
+    </div>
+  `;
+}
+showSummary();
+
+function luhnCheck(num){
+  // simple Luhn algorithm validator
+  num = num.replace(/\s+/g,'');
+  let sum=0; let alt=false;
+  for(let i=num.length-1;i>=0;i--){ let n = parseInt(num[i],10); if(isNaN(n)) return false; if(alt){ n*=2; if(n>9) n-=9 } sum+=n; alt=!alt }
+  return sum%10===0;
+}
+
+function submitForm(e){
+  e.preventDefault();
+  if(cart.length===0){ alert('Cart is empty'); location.href='products.html'; return false; }
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const card = document.getElementById('card').value.trim();
+  const exp = document.getElementById('exp').value.trim();
+  const cvv = document.getElementById('cvv').value.trim();
+
+  if(!luhnCheck(card)) {
+    if(!confirm('Card number looks invalid (demo). Continue?')) return false;
+  }
+  // Build order data (client-side)
+  const order = {
+    id: 'ORD' + Math.floor(Math.random()*900000 + 100000),
+    name, email, total: calcSummary().total,
+    items: cart,
+    created: new Date().toISOString()
+  };
+  // Save client-side order record
+  const orders = JSON.parse(localStorage.getItem('shoply_orders')||'[]');
+  orders.push(order);
+  localStorage.setItem('shoply_orders', JSON.stringify(orders));
+
+  // Clear cart and go to thankyou with order id in query string
+  localStorage.removeItem('shoply_cart');
+  location.href = `thankyou.html?order=${order.id}`;
+  return false;
+}
+</script>
+</body>
+</html>
