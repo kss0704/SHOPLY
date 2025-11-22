@@ -107,5 +107,23 @@ function renderSummary(){
 function clearCart(){ if(confirm('Clear entire cart?')){ cart=[]; localStorage.setItem('shoply_cart', JSON.stringify(cart)); render(); } }
 render();
 </script>
+  <script>
+window.addEventListener("DOMContentLoaded", function() {
+  // Wait for GA to load
+  setTimeout(() => {
+    try {
+      gtag('get', 'G-EL8KYP4VVE', 'linker_param', (param) => {
+        const btn = document.querySelector('a[href*="shoply6309.netlify.app/payment"]');
+        if (btn && param) {
+          const separator = btn.href.includes('?') ? '&' : '?';
+          btn.href = btn.href + separator + param;
+        }
+      });
+    } catch(e) {
+      console.log("GA linker error:", e);
+    }
+  }, 800); // small delay so GA initializes
+});
+</script>
 </body>
 </html>
